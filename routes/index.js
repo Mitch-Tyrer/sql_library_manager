@@ -16,15 +16,15 @@ router.get('/books', (req, res, next) => {
 
 //GET new-book
 router.get('/new', (req, res, next) => {
-  res.render('new-book', {books: Books.build()}).catch((err) => {
+  res.render('new-book', {book: Books.build()}).catch((err) => {
     res.sendStatus(500);
   });
 });
 
 //POST create book
-router.post('/books', (req, res, next) => {
+router.post('/new', (req, res, next) => {
   Books.create(req.body).then(() =>{
-    res.redirect('/');
+    res.redirect('/books');
   }).catch( (err) => {
     if(err.name === 'SequelizeValidationError'){
       res.render('new-book', {books: Books.build(req.body), errors: err.errors})
@@ -39,38 +39,40 @@ router.post('/books', (req, res, next) => {
 // GET update-book
 router.get('/books/:id', (req, res, next) => {
   Books.findByPk(req.params.id).then((book) => {
-    res.render('update-book', { book });
+    if(book){
+      res.render('update-book', { book });
+    } else {
+      res.render('page-not-found');
+    }
   }).catch((err) => {
     res.sendStatus(500);
   });  
 });
 
-router.post('/books/:id',(req,res) => {
-  Book.findById(req.params.id).then(books => {
+router.post('/books/:id',(req,res, next) => {
+  Books.findByPk(req.params.id).then(books => {
+    if(book){
       return books.update(req.body); 
+    } else {
+      res.render('page-not-found');
+    }
   }).then( () => {
     res.redirect('/books')
   }).catch( err => {
     if(err.name === "SequelizeValidationError"){
-      var books = Book.build(req.body);
-      books.id = req.params.id;
+      var book = Books.build(req.body);
+      book.id = req.params.id;
       res.render('update-book', {
-        books: books,
+        book,
         errors: err.errors
       });
     } else {
       throw err;
     }
   }).catch(err => {
-    res.send(500);
+    res.sendStatus(500);
   })
 });
-
-
-
-
-
-
 
 
 //DELETE book
