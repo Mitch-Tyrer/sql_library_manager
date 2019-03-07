@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Books = require('../models').Books
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op
 
 /* GET home page. */
 router.get('/', (req, res) => {
@@ -74,6 +76,30 @@ router.post('/books/:id',(req,res, next) => {
   })
 });
 
+// SEARCH ROUTE
+router.post('/search', (req, res, next) => {
+  console.log(req.body.search)
+  Books.findAll({
+    where: {
+      [Op.or]: {
+        title: {
+          [Op.like]: `%${req.body.search}%`
+        },
+        author: {
+          [Op.like]: `%${req.body.search}%`
+        },
+        genre: {
+          [Op.like]: `%${req.body.search}%`
+        },
+        year: {
+          [Op.like]: `%${req.body.search}%`
+        }
+      }
+    }
+  }).then((books) => {
+    res.render('index', { books });
+  })
+});
 
 //DELETE book
 router.post('/books/:id/delete', (req, res,next) => {

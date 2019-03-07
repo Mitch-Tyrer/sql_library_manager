@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    form(action='/search', method='post')
+        label(for="search")
+        input#search(type="search", name="search")
+        input(type="submit", value="Search")
