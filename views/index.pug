@@ -16,7 +16,15 @@ block content
         each book in books  
           tr
             td
-              a(href=`/books/${book.id}`) #{book.title}
+              a(href=`/books/update/${book.id}`) #{book.title}
             td #{book.author}
             td #{book.genre}
             td #{book.year}
+    div.pagination
+      ul
+        - for(let i = 1; i<=pages; i++)
+          li
+            if parseInt(page) == i
+              a(href=`/books/${i}` class="active")= i
+            else
+              a(href=`/books/${i}` class="")= i

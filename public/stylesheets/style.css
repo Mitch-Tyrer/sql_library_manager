@@ -96,3 +96,22 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+
+  .pagination li{
+    display: inline;
+  }
+
+    .pagination li a{
+      border: 1px solid #eaeaea;
+      border-radius: 5px;
+      padding: 3px 8px;
+      text-decoration: none;
+      color: #019875;
+    }
+
+    .pagination li a.active,
+    .pagination li a:hover{
+      background-color: black;
+      color: #fff;
+    }
