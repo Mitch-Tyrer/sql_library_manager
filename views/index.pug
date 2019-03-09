@@ -24,11 +24,11 @@ block content
       ul
         - for(let i = 1; i<=pages; i++)
           li
-            if url == `/search`
+            if (url == `/search/${page}/`)
               if parseInt(page) == i
-                a(href=`/search/${i}${search}` class="active")= i
+                a(href=`/search/${i}/${search}` class="active")= i
               else
-                a(href=`/search/${i}${search}` class="")= i
+                a(href=`/search/${i}/${search}` class="")= i
             else
               if parseInt(page) == i
                 a(href=`/books/${i}` class="active")= i

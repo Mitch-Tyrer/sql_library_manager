@@ -95,10 +95,11 @@ router.post('/books/upate/:id', (req, res, next) => {
 
 
 // SEARCH ROUTE
-router.get('/search', (req, res, next) => {
+router.get('/search/:page/', (req, res, next) => {
   let limit = 10;
   let offset = 0;
-  let search = req.query.search
+  let { search } = req.query;
+  console.log(req.query);
   Books.findAndCountAll({
     where: {
       [Op.or]: {
@@ -117,37 +118,39 @@ router.get('/search', (req, res, next) => {
       }
     }
   }).then((books) => {
-  let page = req.params.page;
-  if(page === undefined){
-    page = '1';
-  }
-  let pages = Math.ceil(books.count / limit);
-  offset = limit * (page -1);
+    let page = req.params.page;
+    if (page === undefined) {
+      page = '1';
+    }
+    let pages = Math.ceil(books.count / limit);
+    offset = limit * (page - 1);
 
-  Books.findAll({
-    where: {
-      [Op.or]: {
-        title: {
-          [Op.like]: `%${search}%`
-        },
-        author: {
-          [Op.like]: `%${search}%`
-        },
-        genre: {
-          [Op.like]: `%${search}%`
-        },
-        year: {
-          [Op.like]: `%${search}%`
+    Books.findAll({
+      where: {
+        [Op.or]: {
+          title: {
+            [Op.like]: `%${search}%`
+          },
+          author: {
+            [Op.like]: `%${search}%`
+          },
+          genre: {
+            [Op.like]: `%${search}%`
+          },
+          year: {
+            [Op.like]: `%${search}%`
+          }
         }
-      }
-    },
-    order: [['title', 'ASC']],
-    limit: limit,
-    offset: offset
-  }).then((books) => {
-    res.render('index', { books, pages, page, url: req.path, query: search });
-  })
-})
+      },
+      order: [['title', 'ASC']],
+      limit: limit,
+      offset: offset
+    }).then((books) => {
+      res.render('index', { books, pages, page, url: req.path, search });
+    });//end render new list based on pagination
+  }).catch((err) => {
+    res.sendStatus(500);
+  });
 });
 
 
