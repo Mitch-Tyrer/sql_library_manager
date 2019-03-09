@@ -26,9 +26,9 @@ block content
           li
             if (url == `/search/${page}/`)
               if parseInt(page) == i
-                a(href=`/search/${i}/${search}` class="active")= i
+                a(href=`/search/${i}/?search=${search}` class="active")= i
               else
-                a(href=`/search/${i}/${search}` class="")= i
+                a(href=`/search/${i}/?search=${search}` class="")= i
             else
               if parseInt(page) == i
                 a(href=`/books/${i}` class="active")= i

@@ -99,7 +99,6 @@ router.get('/search/:page/', (req, res, next) => {
   let limit = 10;
   let offset = 0;
   let { search } = req.query;
-  console.log(req.query);
   Books.findAndCountAll({
     where: {
       [Op.or]: {
