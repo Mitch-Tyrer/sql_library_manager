@@ -26,7 +26,11 @@ router.get('/books/:page', (req, res, next) => {
       limit: limit,
       offset: offset
     }).then((books) => {
-      res.render('index', { books, pages, page });
+      if(page <= pages){
+        res.render('index', { books, pages, page });
+      } else {
+        res.render('page-not-found');
+      }
     });//end render new list based on pagination
   }).catch((err) => {
     res.sendStatus(500);
