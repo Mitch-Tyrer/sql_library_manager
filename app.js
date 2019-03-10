@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var methodOverride = require('method-override')
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 const bodyParser = require('body-parser');
 
 var app = express();
@@ -19,7 +18,6 @@ app.use(express.static(__dirname + '/public'))
 app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -35,9 +35,7 @@ router.get('/books/:page', (req, res, next) => {
 
 //GET new-book
 router.get('/new', (req, res, next) => {
-  res.render('new-book', { book: Books.build() }).catch((err) => {
-    res.sendStatus(500);
-  });
+  res.render('new-book', { book: Books.build() })
 });
 
 //POST create book
@@ -46,7 +44,7 @@ router.post('/new', (req, res, next) => {
     res.redirect('/');
   }).catch((err) => {
     if (err.name === 'SequelizeValidationError') {
-      res.render('new-book', { books: Books.build(req.body), errors: err.errors })
+      res.render('new-book', { book: Books.build(req.body), errors: err.errors })
     } else {
       throw err;
     }
@@ -56,10 +54,11 @@ router.post('/new', (req, res, next) => {
 });
 
 // GET update-book
-router.get('/books/update/:id', (req, res, next) => {
-  Books.findByPk(req.params.id).then((book) => {
+router.get('/update/:id', (req, res, next) => {
+  let id = req.params.id;
+  Books.findByPk(id).then((book) => {
     if (book) {
-      res.render('update-book', { book });
+      res.render('update-book', { book, id });
     } else {
       res.render('page-not-found');
     }
@@ -68,21 +67,22 @@ router.get('/books/update/:id', (req, res, next) => {
   });
 });
 
-router.post('/books/upate/:id', (req, res, next) => {
-  Books.findByPk(req.params.id).then(books => {
+router.post('/update/:id', (req, res, next) => {
+  let id = req.params.id;
+  Books.findByPk(id).then(book => {
     if (book) {
-      return books.update(req.body);
+      return book.update(req.body);
     } else {
       res.render('page-not-found');
     }
   }).then(() => {
-    res.redirect('/')
+    res.redirect('/books/1')
   }).catch(err => {
     if (err.name === "SequelizeValidationError") {
       var book = Books.build(req.body);
-      book.id = req.params.id;
       res.render('update-book', {
         book,
+        id,
         errors: err.errors
       });
     } else {
@@ -145,7 +145,11 @@ router.get('/search/:page/', (req, res, next) => {
       limit: limit,
       offset: offset
     }).then((books) => {
-      res.render('index', { books, pages, page, url: req.path, search });
+      if(search){
+        res.render('index', { books, pages, page, url: req.path, search });
+      } else {
+        res.redirect('/');
+    }
     });//end render new list based on pagination
   }).catch((err) => {
     res.sendStatus(500);
