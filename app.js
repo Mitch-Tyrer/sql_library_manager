@@ -1,9 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var methodOverride = require('method-override')
+var methodOverride = require('method-override');
 var indexRouter = require('./routes/index');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 
 var app = express();
 
@@ -16,8 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'))
 app.use(methodOverride('_method'));
+app.use(compression());
 
 app.use('/', indexRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
