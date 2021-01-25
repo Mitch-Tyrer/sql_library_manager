@@ -5,6 +5,7 @@ var methodOverride = require('method-override');
 var indexRouter = require('./routes/index');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const helmet = require('helmet');
 
 var app = express();
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'))
 app.use(methodOverride('_method'));
 app.use(compression());
+app.use(helmet());
 
 app.use('/', indexRouter);
 
